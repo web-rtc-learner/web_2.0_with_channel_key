@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Agora Web Sample</title>
+<link rel="stylesheet" href="vendor/css/bootstrap.min.css">
+<!-- <script src="AgoraRTCSDK-2.0.0.js"></script> -->
+<!-- <script src="AgoraRTCSDK-1.14.0.js"></script> -->
+<!-- <script src="AgoraRTC-production.js"></script> -->
+<script src="vendor/js/AgoraRTC-production-2.1-lts.js"></script>
+<script src="vendor/jquery.js"></script>
+</head>
+<body>
+    <div>
+        <div id="div_device" class="panel panel-default">
+            <div class="select">
+                <label for="audioSource">Audio source: </label><select id="audioSource"></select>
+            </div>
+            <div class="select">
+                <label for="videoSource">Video source: </label><select id="videoSource"></select>
+            </div>
+        </div>
+
+        <div id="div_join" class="panel panel-default">
+              <div class="panel-body">
+                  AppID: <input id="appid" type="text" value="" size="36" >
+
+              </div>
+              <div class="panel-body">
+                Appcert:<input id="appcert" type="text" value="" size="36" >
+              </div>
+              <div class="panel-body">
+                Channel: <input id="channel" type="text" value="1000" size="">
+              </div>
+              <div class="panel-body">
+                Uid:<input id="uid" type="text" value="0" size="36" >
+                
+              </div>
+              <div>
+                share_Uid:<input id="share_uid" type="text" value="0" size="36" >
+              </div>
+              <div class="panel-body">
+                Host: <input id="video" type="checkbox" checked>
+              </div>
+            <div class="panel-body">
+                Channel Key:<input id="input_channel_key" type="text" value="" size="">
+            </div>
+            <div class="panel-body">
+                          
+                          <div class="panel-body">
+    app id: 74a0b7bb5d3e47c7abca0533d17b0afa
+                          </div>
+                          <div class="panel-body">
+                            app id: e2b9a86f79af447b887bad2b64f6c398
+                          </div>
+                          <div class="panel-body">
+                            app cert: 88666bf3714e4b568f16f5c026df0541
+                          </div>
+                
+                
+            </div>
+            <div>
+                <button id="join" class="btn btn-primary" onclick="join()">Join</button>
+                <button id="leave" class="btn btn-primary" onclick="leave()">Leave</button>
+                <button id="publish" class="btn btn-primary" onclick="publish()">Publish</button>
+                <button id="unpublish" class="btn btn-primary" onclick="unpublish()">Unpublish</button>
+                <button id="share_screen" class="btn btn-primary" onclick="share()">Share Screen</button>
+                <button id="pause_screen" class="btn btn-primary" onclick="pause_share()">Pause Screen</button>
+                <button id="get_status" class="btn btn-primary" onclick="get_status()">Get Status</button>
+                <button id="dis_volume" class="btn btn-primary" onclick="display_volume()">Display Volume</button>
+
+              </div>
+            <div>
+                Calculated Channel Key = <label id="genChannelKey"></label>
+                Input Channel Key Status = <label id="status"></label>
+                Currnt Volume = <label id="uid_volume"></label><label id="volume"></label>
+            </div>
+        </div>
+
+        <!--style>
+        .video__box{width:910px; margin:0 auto; overflow:hidden;}
+        .video__main{ width:810px; height:607px;float:left }
+        .video__list{ width:200px; height:607px; float:left;}
+        .video__item{ width:200px; height:174px; hei background:url(/img/icon_live.png) center center no-repeat; }
+        </style>
+        <div class="video__main">
+        </div>
+        <div class="video__list">
+            <div class="video__item"></div>
+            <div id="video" class="video__item">
+                <div id="agora_local"></div>
+            </div>
+        </div-->
+
+        <div  id="video" style="margin:0 auto;">
+            <div class="resize-sensor" id="agora_local" style="float:right;width:210px;height:147px;display:inline-block;"></div>
+        </div>
+    </div>
+    <script src="vendor/js/index.js" type="text/javascript"></script> 
+</body>
+</html>

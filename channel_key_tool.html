@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Agora CS Team Channel Key Verification Tool</title>
+<link rel="stylesheet" href="vendor/css/bootstrap.css">
+<!-- <script src="AgoraRTCSDK-2.0.0.js"></script> -->
+<!-- <script src="AgoraRTCSDK-1.14.0.js"></script> -->
+<script src="AgoraRTC-production-2.1-lts.js"></script>
+<!-- <script src="AgoraRTC-production.js"></script> -->
+<script>src="dynamic_key.js"</script>
+<!-- <script src="vendor/jquery.js"></script> -->
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="page-header text-center">
+            <h1>Agora CS Team Channel Key Verification Tool</h1>
+        </div>
+        
+        <div class="input_area">
+            <form>
+                <div class="form-group">
+                    <label for="appid">App ID: </label>
+                    <input id="app_id" type="text" class="form-control" value="e2b9a86f79af447b887bad2b64f6c398" size="36" >
+                </div>
+                <div class="form-group">
+                    <label for="appcert">App Cert: </label>
+                    <input id="app_cert" type="text" class="form-control" value="88666bf3714e4b568f16f5c026df0541" size="36" >
+                </div>
+                <div class="form-group">
+                    <label for="channel">Channel: </label>
+                    <input id="channelID" type="text" class="form-control" value="1000" size="36" >
+                </div>
+                <div class="form-group">
+                    <label for="uid"> Uid: </label>
+                    <input id="u_id" type="text" class="form-control" value="0" size="36" >
+                </div>
+            </form>
+        </div>          
+
+        <div class="row container-fluid">
+            <div>
+                    <div>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuDivider">
+                                <li role="separator" class="divider">1</li>
+                                <li role="separator" class="divider">2</li>
+                                <li role="separator" class="divider">3</li>
+                            </ul>
+                    </div>
+            </div>
+
+            <div>
+                <button type = "button" class="btn btn-primary col-md-4 col-xs-12" id="calculate" name="calculate" onclick="cal()" type="button">Calculate</button>
+                <button type = "button" class="btn btn-primary col-md-4 col-xs-12" name="get_time" onclick="get_sub_time()">Get Time Stamp</button>
+            </div>
+            <div>
+                <button type = "button" class="btn btn-primary col-md-4 col-xs-12" name="clear" onclick="clear_t()">Clear</button>
+            </div>
+            <div>
+                    <button type = "button" class="btn btn-primary col-md-12 col-xs-12" name="clear" onclick="test_2()">test</button>
+                    <button id="nav_return" class="btn btn-primary" ><a href="./index-default.html">1</a></button>
+                </div>
+        </div>
+        <div class="text-center">
+            <div class="form-group">
+                    <lable for="channel_key_output">Channel Key: </lable>
+                    <label id="correct_channel_key"></label>
+            </div>
+            <div class="form-group">
+                    <lable for="result">The Result:</lable> 
+                    <label id="result" ></label>
+            </div>
+            <div class="form-group">
+                    <lable for="submit_ts">Submit UTC TS:</lable> 
+                    <label id="ts" ></label>
+            </div>
+            <div class="form-group">
+                    <lable for="submit_sh_ts">Submit SH TS:</lable> 
+                    <label id="sh_ts" ></label>
+            </div>
+            
+        </div>
+    </div>
+    
+</body>
+<script>
+    var test_client;
+    var ts = 0;
+    var obj = document.getElementById("result");
+
+function cal(){
+    var appid = app_id.value;
+    var appcert = app_cert.value;
+    var uid = 0;
+    var channel = channelID.value;
+    var channel_key = null;
+    
+    
+    AgoraRTC.Logger.setLogLevel(AgoraRTC.Logger.DEBUG);
+    var date = new Date;
+    ts = date.getTime()/1000;
+    console.log(parseInt(ts));
+        // 获取年：
+        var y =  date.getUTCFullYear();    
+        // 获取月： 
+        var m = date.getUTCMonth() ;
+        // 获取日： 
+        var d = date.getUTCDate();
+        // 获取小时：
+        var h= date.getUTCHours();
+        // 获取分钟：
+        var M = date.getUTCMinutes();
+        // 获取秒钟：
+        var s = date.getUTCSeconds();
+        var utc = Date.UTC(y,m,d,h,M,s)/1000;
+    $('#ts').html(parseInt(ts));
+    $.ajax({
+// url:"http://recording.agorapremium.agora.io:9001/agora/media/genAccessToken?uid=333&channelname=qaz&expiredts=0&key=f248443b95df480581e06497d620a48e&sign=a5c832fbb6e4473a97df9300eb18eccd%20&audio=1&video=1&data=1"
+        url: 'http://recording.agorapremium.agora.io:9001/agora/media/genDynamicKey5?uid=0&key=' + appid + '&sign=' + appcert + '&channelname=' + channel
+    }).done(function (key) {
+
+        channel_key = key;
+        console.log("Channel key is " + key);
+        document.getElementById("correct_channel_key").innerHTML = key;
+        test_client = AgoraRTC.createClient();
+        test_client.init(appid, function(){
+            if(u_id.value==="0"){
+                    uid = null;
+                }else {
+                    uid = parseInt(u_id.value);
+                }
+            test_client.join(channel_key,channel,uid,function(uid){
+                console.log("666")
+                
+                obj.innerHTML = "Cool";
+                obj.setAttribute("class","alert alert-success");
+                obj.setAttribute("role","alert");
+                $('#ts').html(parseInt(ts));
+                $('#sh_ts').html(parseInt(utc));
+            },function(err){
+                obj.innerHTML = err;
+                obj.setAttribute("class","alert alert-danger");
+                obj.setAttribute("role","alert");
+                $('#ts').html(parseInt(ts));
+                $('#sh_ts').html(parseInt(utc));
+            });
+        })
+    }); 
+}
+
+function clear_t(){
+    console.log("Hello, world");
+
+    $('#result').html('Ready');
+    obj.setAttribute("class","alert alert-success");
+    obj.setAttribute("role","alert");
+    $('#correct_channel_key').html('Ready');
+    document.getElementById("ts").innerHTML = "0";
+}
+
+// $(document).ready(function(){
+//         $("#player").click(function(){
+//             $('')
+
+//         });
+//         $("#test").click(function(){
+//         });
+//     });
+
+function get_sub_time(){
+   var ts_current = new Date();
+    ts_current = ts_current.getTime()/1000;
+    console.log(parseInt(ts_current));
+    if(test_client!=null){
+            test_client.leave(function(){
+            console.log("leave");
+            $('#ts').html(parseInt(ts_current));
+        });
+    }else{
+        $('#ts').html(parseInt(ts_current));
+    }
+    
+    $('#ts').html(parseInt(ts_current));
+    // document.getElementById("ts").innerHTML=parseInt(ts);
+    // return parseInt(ts_current);
+
+}
+
+function test_2(){
+    var date = new Date();
+    // 获取年：
+    var y =  date.getUTCFullYear();    
+    // 获取月： 
+    var m = date.getUTCMonth() ;
+    // 获取日： 
+    var d = date.getUTCDate();
+    // 获取小时：
+    var h= date.getUTCHours();
+    // 获取分钟：
+    var M = date.getUTCMinutes();
+    // 获取秒钟：
+    var s = date.getUTCSeconds();
+    var utc = Date.UTC(y,m,d,h,M,s)/1000;
+    console.log("data_0:"+date);
+    console.log("date_1:" + utc);
+    // $('#ts').html(parseInt(ts_current));
+    // var date_1 = new Date(+new Date()+16*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,''); 
+    var date_1 = new Date(+new Date()).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');  
+    console.log("date_2:" + date_1);//2017-01-22 11:08:46  
+//     var stringTime = "2014-07-10 10:21:12";
+// var timestamp2 = Date.parse(new Date(date_1));
+// timestamp2 = timestamp2 / 1000;
+// console.log(timestamp2);
+// console.log(timestamp2-utc);
+}
+// //2014-07-10 10:21:12的时间戳为：1404958872 
+// console.log(stringTime + "的时间戳为：" + timestamp2);
+// }
+</script>
+</html>
