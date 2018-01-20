@@ -9,6 +9,11 @@
 <!-- <script src="AgoraRTCSDK-1.14.0.js"></script> -->
 <!-- <script src="AgoraRTC-production.js"></script> -->
 <script src="vendor/js/AgoraRTC-production-2.1-lts.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous">
+  </script>
 <!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
 <!-- <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
 <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
@@ -34,116 +39,114 @@
         <div class="panel-body">
           app cert: 88666bf3714e4b568f16f5c026df0541
         </div> -->
-        <form>
-            <div id="div_device" class="panel panel-default">
-                <div class="select">
-                    <label for="audioSource">Audio source: </label><select id="audioSource"></select>
-                </div>
-                <div class="select">
-                    <label for="videoSource">Video source: </label><select id="videoSource"></select>
-                </div>
-            </div>
-            <div class="row container-fluid">
-                <label>(* is required)</label>
-                <select name="mode" id="mode" form="mode" class="form-control" required>
-                    <option value="">Web Only</option>
-                    <option value="introp" selected>Introp</option>
-                    <option value="h264_introp">Safari</option>
-                </select>
-            </div>
+      <div id="div_device" class="panel panel-default">
+          <div class="select">
+              <label for="audioSource">Audio source: </label><select id="audioSource"></select>
+          </div>
+          <div class="select">
+              <label for="videoSource">Video source: </label><select id="videoSource"></select>
+          </div>
+      </div>
+      <div class="row container-fluid">
+          <label>(* is required)</label>
+          <select name="mode" id="mode" form="mode" class="form-control" required>
+              <option value="">Web Only</option>
+              <option value="introp" selected>Introp</option>
+              <option value="h264_introp">Safari</option>
+          </select>
+      </div>
 
-            <div class="panel-body row container-fluid">
-                <label>AppID *: </label>
-                <input id="appid" type="text" class="form-control" value="e2b9a86f79af447b887bad2b64f6c398"  required >
-            </div>
-            <div class="panel-body row container-fluid">
-                <label>Channel *: </label>
-                <input id="channel" type="text" value="1000" class="form-control" required >
-            </div>
-            <div class="panel-body row container-fluid">
-                <label> Uid:(if it is 0, Agora Server will allocate one for you.)</label> 
-                <input id="uid" type="text" value="0" size="36" class="form-control" > 
-            </div>
-            <div class="panel-body row container-fluid">
-                <label>Screen id:</label> 
-                <input id="share_uid" type="text" value="0" class="form-control" >
-            </div>
-            <div class="panel-body row container-fluid">
-                <label>Appcert:</label>
-                <input id="appcert" type="text" value="88666bf3714e4b568f16f5c026df0541" class="form-control" >
-            </div>
-            <div class="panel-body row container-fluid">
-                <label>Channel Key:</label><label id="genChannelKey"></label>
-                <input id="input_channel_key" type="text" value="" class="form-control">
-            </div>
-            <div class="panel-body row container-fluid">
-                Host: <input id="video" type="checkbox" checked>
-            </div>
-            <div class="btn-group">
-                <label>Video Profile:</label>
-                <select name="videoProfile" class="form-control" id="videoProfile">
-                    <option value="120p,120p_1">120p,120p_1: 160x120, 15fps, 65kbps</option>
-                    <option value="120p_3">120p_3: 120x120, 15fps, 50kbps</option>
-                    <option value="180p,180p_1">180p,180p_1: 320x180, 15fps, 140kbps</option>
-                    <option value="180p_3">180p_3: 180x180, 15fps, 100kbps</option>
-                    <option value="180p_4">180p_4: 240x180, 15fps, 120kbps</option>
-                    <option value="240p,240p_1">240p,240p_1: 320x240, 15fps, 200kbps</option>
-                    <option value="240p_3">240p_3: 240x240, 15fps, 140kbps</option>
-                    <option value="240p_4">240p_4: 424x240, 15fps, 220kbps</option>
-                    <option value="360p,360p_1">360p,360p_1: 640x360, 15fps, 400kbps</option>
-                    <option value="360p_3">360p_3: 360x360, 15fps, 260kbps</option>
-                    <option value="360p_4">360p_4: 640x360, 30fps, 600kbps</option>
-                    <option value="360p_6">360p_6: 360x360, 30fps, 400kbps</option>
-                    <option value="360p_7">360p_7: 480x360, 15fps, 320kbps</option>
-                    <option value="360p_8">360p_8: 480x360, 30fps, 490kbps</option>
-                    <option value="360p_9">360p_9: 640x360, 15fps, 800kbps</option>
-                    <option value="360p_10">360p_10: 640x360, 24fps, 800kbps</option>
-                    <option value="360p_11">360p_11: 640x360, 24fps, 1000kbps</option>
-                    <option value="480p,480p_1">480p,480p_1: 640x480, 15fps, 500kbps</option>
-                    <option value="480p_2">480p_2: 640x480, 30fps, 1000kbps</option>
-                    <option value="480p_3">480p_3: 480x480, 15fps, 400kbps</option>
-                    <option selected="" value="480p_4">480p_4: 640x480, 30fps, 750kbps</option>
-                    <option value="480p_6">480p_6: 480x480, 30fps, 600kbps</option>
-                    <option value="480p_8">480p_8: 848x480, 15fps, 610kbps</option>
-                    <option value="480p_9">480p_9: 848x480, 30fps, 930kbps</option>
-                    <option value="480p_10">480p_10: 640x480, 10fps, 400kbps</option>
-                    <option value="720p,720p_1">720p,720p_1: 1280x720, 15fps, 1130kbps</option>
-                    <option value="720p_2">720p_2: 1280x720, 15fps, 2080kbps</option>
-                    <option value="720p_3">720p_3: 1280x720, 30fps, 1710kbps</option>
-                    <option value="720p_5">720p_5: 960x720, 15fps, 910kbps</option>
-                    <option value="720p_6">720p_6: 960x720, 30fps, 1380kbps</option>
-                    <option value="1080p,1080p_1">1080p,1080p_1: 1920x1080, 15fps, 2080kbps</option>
-                    <option value="1080p_2">1080p_2: 1920x1080, 30fps, 3000kbps</option>
-                    <option value="1080p_3">1080p_3: 1920x1080, 30fps, 3150kbps</option>
-                    <option value="1080p_5">1080p_5: 1920x1080, 60fps, 4780kbps</option>
-                    <option value="1440p,1440p_1">1440p,1440p_1: 2560x1440, 30fps, 4850kbps</option>
-                    <option value="1440p_2">1440p_2: 2560x1440, 60fps, 7350kbps</option>
-                    <option value="4k,4k_1">4k,4k_1: 3840x2160, 30fps, 8910kbps</option>
-                    <option value="4k_3">4k_3: 3840x2160, 60fps, 13500kbps</option></select>
-                </select>
-            </div>
-            <div>
-                Input Channel Key Status = <label id="status"></label>
-                Currnt Volume = <label id="uid_volume"></label><label id="volume"></label>
-            </div> 
-            <div>
-                <button id="join" class="btn btn-primary" onclick="join()">Join</button>
-                <button id="leave" class="btn btn-primary" onclick="leave()">Leave</button>
-                <button id="publish" class="btn btn-primary" onclick="publish()">Publish</button>
-                <button id="unpublish" class="btn btn-primary" onclick="unpublish()">Unpublish</button>
-                <button id="share_screen" class="btn btn-primary" onclick="share()">Share Screen</button>
-                <button id="pause_screen" class="btn btn-primary" onclick="pause_share()">Pause Screen</button>
-                <button id="get_status" class="btn btn-primary" onclick="get_status()">Get Status</button>
-                <button id="dis_volume" class="btn btn-primary" onclick="display_volume()">Display Volume</button>
-                <button id="switch" class="btn btn-primary" onclick="switchDuelStream()">Switch</button>
-                <button id="get_device" class="btn btn-primary" onclick="getDevices()">Get Devices</button>
-                <button id="nav_return" class="btn btn-primary" ><a href="./channel_key_tool.html">1</a></button>
-              </div>
-        </form>
+      <div class="panel-body row container-fluid">
+          <label>AppID *: </label>
+          <input id="appid" type="text" class="form-control" value="e2b9a86f79af447b887bad2b64f6c398"  required >
+      </div>
+      <div class="panel-body row container-fluid">
+          <label>Channel *: </label>
+          <input id="channel" type="text" value="1000" class="form-control" required >
+      </div>
+      <div class="panel-body row container-fluid">
+          <label> Uid:(if it is 0, Agora Server will allocate one for you.)</label> 
+          <input id="uid" type="text" value="0" size="36" class="form-control" > 
+      </div>
+      <div class="panel-body row container-fluid">
+          <label>Screen id:</label> 
+          <input id="share_uid" type="text" value="0" class="form-control" >
+      </div>
+      <div class="panel-body row container-fluid">
+          <label>Appcert:</label>
+          <input id="appcert" type="text" value="88666bf3714e4b568f16f5c026df0541" class="form-control" >
+      </div>
+      <div class="panel-body row container-fluid">
+          <label>Channel Key:</label><label id="genChannelKey"></label>
+          <input id="input_channel_key" type="text" value="" class="form-control">
+      </div>
+      <div class="panel-body row container-fluid">
+          Host: <input id="video" type="checkbox" checked>
+      </div>
+      <div class="btn-group">
+          <label>Video Profile:</label>
+          <select name="videoProfile" class="form-control" id="videoProfile">
+              <option value="120p,120p_1">120p,120p_1: 160x120, 15fps, 65kbps</option>
+              <option value="120p_3">120p_3: 120x120, 15fps, 50kbps</option>
+              <option value="180p,180p_1">180p,180p_1: 320x180, 15fps, 140kbps</option>
+              <option value="180p_3">180p_3: 180x180, 15fps, 100kbps</option>
+              <option value="180p_4">180p_4: 240x180, 15fps, 120kbps</option>
+              <option value="240p,240p_1">240p,240p_1: 320x240, 15fps, 200kbps</option>
+              <option value="240p_3">240p_3: 240x240, 15fps, 140kbps</option>
+              <option value="240p_4">240p_4: 424x240, 15fps, 220kbps</option>
+              <option value="360p,360p_1">360p,360p_1: 640x360, 15fps, 400kbps</option>
+              <option value="360p_3">360p_3: 360x360, 15fps, 260kbps</option>
+              <option value="360p_4">360p_4: 640x360, 30fps, 600kbps</option>
+              <option value="360p_6">360p_6: 360x360, 30fps, 400kbps</option>
+              <option value="360p_7">360p_7: 480x360, 15fps, 320kbps</option>
+              <option value="360p_8">360p_8: 480x360, 30fps, 490kbps</option>
+              <option value="360p_9">360p_9: 640x360, 15fps, 800kbps</option>
+              <option value="360p_10">360p_10: 640x360, 24fps, 800kbps</option>
+              <option value="360p_11">360p_11: 640x360, 24fps, 1000kbps</option>
+              <option value="480p,480p_1">480p,480p_1: 640x480, 15fps, 500kbps</option>
+              <option value="480p_2">480p_2: 640x480, 30fps, 1000kbps</option>
+              <option value="480p_3">480p_3: 480x480, 15fps, 400kbps</option>
+              <option selected="" value="480p_4">480p_4: 640x480, 30fps, 750kbps</option>
+              <option value="480p_6">480p_6: 480x480, 30fps, 600kbps</option>
+              <option value="480p_8">480p_8: 848x480, 15fps, 610kbps</option>
+              <option value="480p_9">480p_9: 848x480, 30fps, 930kbps</option>
+              <option value="480p_10">480p_10: 640x480, 10fps, 400kbps</option>
+              <option value="720p,720p_1">720p,720p_1: 1280x720, 15fps, 1130kbps</option>
+              <option value="720p_2">720p_2: 1280x720, 15fps, 2080kbps</option>
+              <option value="720p_3">720p_3: 1280x720, 30fps, 1710kbps</option>
+              <option value="720p_5">720p_5: 960x720, 15fps, 910kbps</option>
+              <option value="720p_6">720p_6: 960x720, 30fps, 1380kbps</option>
+              <option value="1080p,1080p_1">1080p,1080p_1: 1920x1080, 15fps, 2080kbps</option>
+              <option value="1080p_2">1080p_2: 1920x1080, 30fps, 3000kbps</option>
+              <option value="1080p_3">1080p_3: 1920x1080, 30fps, 3150kbps</option>
+              <option value="1080p_5">1080p_5: 1920x1080, 60fps, 4780kbps</option>
+              <option value="1440p,1440p_1">1440p,1440p_1: 2560x1440, 30fps, 4850kbps</option>
+              <option value="1440p_2">1440p_2: 2560x1440, 60fps, 7350kbps</option>
+              <option value="4k,4k_1">4k,4k_1: 3840x2160, 30fps, 8910kbps</option>
+              <option value="4k_3">4k_3: 3840x2160, 60fps, 13500kbps</option></select>
+          </select>
+      </div>
+      <div>
+          Input Channel Key Status = <label id="status"></label>
+          Currnt Volume = <label id="uid_volume"></label><label id="volume"></label>
+      </div> 
+      <div>
+          <button type="button" id="join" class="btn btn-primary" onclick="join_channel()">Join</button>
+          <button id="leave" class="btn btn-primary" onclick="leave()">Leave</button>
+          <button id="publish" class="btn btn-primary" onclick="publish()">Publish</button>
+          <button id="unpublish" class="btn btn-primary" onclick="unpublish()">Unpublish</button>
+          <button id="share_screen" class="btn btn-primary" onclick="share()">Share Screen</button>
+          <button id="pause_screen" class="btn btn-primary" onclick="pause_share()">Pause Screen</button>
+          <button id="get_status" class="btn btn-primary" onclick="get_status()">Get Status</button>
+          <button id="dis_volume" class="btn btn-primary" onclick="display_volume()">Display Volume</button>
+          <button id="switch" class="btn btn-primary" onclick="switchDuelStream()">Switch</button>
+          <button id="get_device" class="btn btn-primary" onclick="getDevices()">Get Devices</button>
+          <button id="nav_return" class="btn btn-primary" ><a href="./channel_key_tool.html">1</a></button>
+        </div>
         <div  id="video" style="margin:0 auto;">
             <div class="resize-sensor" id="agora_local" style="float:right;width:210px;height:147px;display:inline-block;"></div>
         </div>
     </div>
-    <script src="vendor/js/index.js" type="text/javascript"></script> 
+    <script src="vendor/js/index.js" type="text/javascript"></script>
 </body>
 </html>

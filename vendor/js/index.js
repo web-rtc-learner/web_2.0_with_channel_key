@@ -22,41 +22,43 @@ function return2Index(){
 //  AgoraRTC.Logger.setLogLevel(AgoraRTC.Logger.NONE);
 
 var client,localStream, camera, microphones,shareClient,test_appcert,shareScream;
+var channel_key,test_uid,test_appcert;
 
 var audioSelect = document.querySelector('select#audioSource');
 var videoSelect = document.querySelector('select#videoSource');
 var inputChannelKey = input_channel_key.value;
-
-function join() {
-    var channel_key,test_uid,test_appcert;
+function join_channel(){
+ 
     channel_key = inputChannelKey;
     if(uid.value==="0"){
         test_uid = null;
     }else {
         test_uid = parseInt(uid.value);
     }
-
     test_appcert = appcert.value;
-    // document.getElementById("join").disabled = true;
-    // document.getElementById("video").disabled = true;
     if (!test_appcert) {
         console.log("No channel Key Applied");
         document.getElementById("genChannelKey").innerHTML = "No app cert Applied";
+        channel_key = null;
+    } else if(input_channel_key.value){
+      channel_key = input_channel_key.value;
+join();
     } else {
-        $.ajax({
-            url: 'http://recording.agorapremium.agora.io:9001/agora/media/genDynamicKey5?uid=0&key=' + appid.value + '&sign=' + test_appcert + '&channelname=' + channel.value
-        }).done(function (key) {
-            channel_key = key;
-            console.log("Channel key is " + key);
-            document.getElementById("genChannelKey").innerHTML = channel_key;
-        });
+      $.ajax({
+        url: 'http://recording.agorapremium.agora.io:9001/agora/media/genDynamicKey5?uid='+ uid.value +'&key=' + appid.value + '&sign=' + test_appcert + '&channelname=' + channel.value
+    }).done(function (key) {
+        channel_key = key;
+        console.log("Channel key is " + key);
+        document.getElementById("genChannelKey").innerHTML = channel_key;
+        join();
+    });
     }
+  
+}
 
-  console.log("Init AgoraRTC client with vendor key: " + appid.value);
+function join() {
+console.log("Init AgoraRTC client with vendor key: " + appid.value);
 
-//web 对 web
-  // client = AgoraRTC.createClient({});
-// 除了safari以外
 var mode = document.getElementById("mode").innerHTML;
 alert(mode.value);
 switch (mode) {
@@ -172,13 +174,6 @@ switch (mode) {
     // }
     if ($('div#video #agora_remote'+stream.getId()).length === 0  ){
       $('div#video').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:810px;height:607px;display:inline-block;"></div>');
-      // if(false){
-      //   continue;
-      // }else{
-        
-      // }
-      // $('div#video').append('<div id="agora_remote'+stream.getId()+'" style="float:left;display:inline-block;"></div>');
-
     }
     stream.play('agora_remote' + stream.getId());
   });
