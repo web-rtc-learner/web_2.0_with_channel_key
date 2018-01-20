@@ -2,6 +2,10 @@
  * Function Name: get_devices
  * Return Values: None
  * Callbacks: devices
+ * deviceId:"default"
+ * groupId:"675963c7b77618850e0e48ac20536d8aee3ca783cd4f385a3971377ca14c9b64"
+ * kind:"audioinput"
+ * label:"Default"
  */
     
 function get_devices(){
