@@ -160,7 +160,8 @@ switch (mode) {
     var stream = evt.stream;
     console.log("New stream added: " + stream.getId());
     console.log("Subscribe ", stream);
-    console.log(stream.hasVideo());
+    console.log("The stream has video: "+stream.hasVideo());
+    console.log("The stream has video: "+stream.hasAudio());
     client.subscribe(stream, function (err) {
       console.log("Subscribe stream failed", err);
     });

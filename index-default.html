@@ -14,21 +14,12 @@
   integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
   crossorigin="anonymous">
   </script>
-<!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
-<!-- <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
-<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-<!-- <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
-
-<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
-<!-- <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
-
-<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-<!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
 </head>
 <body>
     <div class="container">
         <div class="page-header text-center">
-            <h1>Agora CS Team Web Group Demo</h1>
+            <h1>Agora CS Team Web SDK Group Demo</h1>
+            <label>(* is required)</label>
         </div>
         <!-- <div class="panel-body">
           app id: 74a0b7bb5d3e47c7abca0533d17b0afa
@@ -39,16 +30,14 @@
         <div class="panel-body">
           app cert: 88666bf3714e4b568f16f5c026df0541
         </div> -->
-      <div id="div_device" class="panel panel-default">
-          <div class="select">
+      <div id="div_device" class="row container-fluid form-inline" >
+          <div class="select form-control col-md-6 col-xs-12">
               <label for="audioSource">Audio source: </label><select id="audioSource"></select>
           </div>
-          <div class="select">
+          <div class="select form-control col-md-6 col-xs-12">
               <label for="videoSource">Video source: </label><select id="videoSource"></select>
           </div>
-      </div>
-      <div class="row container-fluid">
-          <label>(* is required)</label>
+          <label>Mode:</label>
           <select name="mode" id="mode" form="mode" class="form-control" required>
               <option value="">Web Only</option>
               <option value="introp" selected>Introp</option>
@@ -56,34 +45,20 @@
           </select>
       </div>
 
-      <div class="panel-body row container-fluid">
+      <div class="row container-fluid form-inline">
           <label>AppID *: </label>
-          <input id="appid" type="text" class="form-control" value="e2b9a86f79af447b887bad2b64f6c398"  required >
-      </div>
-      <div class="panel-body row container-fluid">
+          <input id="appid" type="text" class="form-control" value="e2b9a86f79af447b887bad2b64f6c398" size="35" required >
           <label>Channel *: </label>
-          <input id="channel" type="text" value="1000" class="form-control" required >
-      </div>
-      <div class="panel-body row container-fluid">
-          <label> Uid:(if it is 0, Agora Server will allocate one for you.)</label> 
-          <input id="uid" type="text" value="0" size="36" class="form-control" > 
-      </div>
-      <div class="panel-body row container-fluid">
+          <input id="channel" type="text" value="1000" class="form-control" size="15" required >
+          <label> Uid:</label> 
+          <input id="uid" type="text" value="0" size="5" class="form-control" > 
           <label>Screen id:</label> 
-          <input id="share_uid" type="text" value="0" class="form-control" >
+          <input id="share_uid" type="text" value="0" size="5"class="form-control" >
+          <label>(if it is 0, Agora Server will allocate one for you.)</label>
       </div>
-      <div class="panel-body row container-fluid">
+      <div class="row container-fluid form-inline">
           <label>Appcert:</label>
-          <input id="appcert" type="text" value="88666bf3714e4b568f16f5c026df0541" class="form-control" >
-      </div>
-      <div class="panel-body row container-fluid">
-          <label>Channel Key:</label><label id="genChannelKey"></label>
-          <input id="input_channel_key" type="text" value="" class="form-control">
-      </div>
-      <div class="panel-body row container-fluid">
-          Host: <input id="video" type="checkbox" checked>
-      </div>
-      <div class="btn-group">
+          <input id="appcert" type="text" value="88666bf3714e4b568f16f5c026df0541" class="form-control" size="35" >
           <label>Video Profile:</label>
           <select name="videoProfile" class="form-control" id="videoProfile">
               <option value="120p,120p_1">120p,120p_1: 160x120, 15fps, 65kbps</option>
@@ -126,6 +101,13 @@
               <option value="4k_3">4k_3: 3840x2160, 60fps, 13500kbps</option></select>
           </select>
       </div>
+      <div class="row container-fluid">
+          <label>Channel Key:</label><label id="genChannelKey"></label>
+          <input id="input_channel_key" type="text" value="" class="form-control" size="100" >
+      </div>
+      <div class="row container-fluid">
+          Host: <input id="video" type="checkbox" checked>
+      </div>
       <div>
           Input Channel Key Status = <label id="status"></label>
           Currnt Volume = <label id="uid_volume"></label><label id="volume"></label>
@@ -136,8 +118,6 @@
           <button id="publish" class="btn btn-primary" onclick="publish()">Publish</button>
           <button id="unpublish" class="btn btn-primary" onclick="unpublish()">Unpublish</button>
           <button id="share_screen" class="btn btn-primary" onclick="share()">Share Screen</button>
-          <button id="pause_screen" class="btn btn-primary" onclick="pause_share()">Pause Screen</button>
-          <button id="get_status" class="btn btn-primary" onclick="get_status()">Get Status</button>
           <button id="dis_volume" class="btn btn-primary" onclick="display_volume()">Display Volume</button>
           <button id="switch" class="btn btn-primary" onclick="switchDuelStream()">Switch</button>
           <button id="get_device" class="btn btn-primary" onclick="getDevices()">Get Devices</button>
