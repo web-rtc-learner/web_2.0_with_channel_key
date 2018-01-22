@@ -169,13 +169,20 @@ switch (mode.value) {
     console.log("Subscribe ", stream);
     console.log("The stream has video: "+stream.hasVideo());
     console.log("The stream has video: "+stream.hasAudio());
+    console.log("*********************");
+    console.log(stream);
+    console.log("*********************");
     client.subscribe(stream, function (err) {
+      console.log("*********************");
+      console.log(stream);
+      console.log("*********************");
       console.log("Subscribe stream failed", err);
     });
   });
 
   client.on('stream-subscribed', function (evt) {
     var stream = evt.stream;
+   
     console.log("Subscribe remote stream successfully: " + stream.getId());
     // if(stream.getId()==shareScream.getId()){
     //   console.log("local share screen stream is found");
