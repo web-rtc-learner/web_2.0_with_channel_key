@@ -36,10 +36,15 @@ function join_channel(){
         test_uid = parseInt(uid.value);
     }
     test_appcert = appcert.value;
+    if(input_channel_key.value){
+      channel_key=input_channel_key.value;
+      join();    
+    }
     if (!test_appcert) {
         console.log("No channel Key Applied");
         document.getElementById("genChannelKey").innerHTML = "No app cert Applied";
         channel_key = null;
+        join();
     } else if(input_channel_key.value){
       channel_key = input_channel_key.value;
 join();
@@ -59,17 +64,17 @@ join();
 function join() {
 console.log("Init AgoraRTC client with vendor key: " + appid.value);
 
-var mode = document.getElementById("mode").innerHTML;
+// var mode = document.getElementById("mode").innerHTML;
 alert(mode.value);
-switch (mode) {
+switch (mode.value) {
   case "":
   client = AgoraRTC.createClient();
     break;
-  case "introp":
-  client = AgoraRTC.createClient("interop");
+  case "interop":
+  client = AgoraRTC.createClient({mode:'interop'});
     break;
   default:
-  client = AgoraRTC.createClient("h264_interop");
+  client = AgoraRTC.createClient({mode:'h264_interop'});
     break;
 }
   // client = AgoraRTC.createClient({mode: 'interop'});
@@ -93,7 +98,7 @@ switch (mode) {
       if (document.getElementById("video").checked) {
         camera = videoSource.value;
         microphone = audioSource.value;
-        alert(camera);
+        // alert(camera);
         
   localStream = AgoraRTC.createStream({streamID: uid, audio: true, cameraId: camera, microphoneId: microphone, video:true, screen: false});
         //localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
