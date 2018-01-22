@@ -173,7 +173,7 @@ switch (mode.value) {
     //   console.log("local share screen stream is found");
     // }
     if ($('div#video #agora_remote'+stream.getId()).length === 0  ){
-      $('div#video').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:210px;height:147px;display:inline-block;"></div>');
+      $('div#video #agora_remote').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:210px;height:147px;display:inline-block;"></div>');
       // $('div#video').append('<lable>Remoter Video Source</lable')
     }
     stream.play('agora_remote' + stream.getId());
@@ -215,6 +215,22 @@ switch (mode.value) {
   });
 
 }
+
+function stopStream(){
+   localStream.stop();
+   console.log("Local Stream " + localStream.getId() + " Stopped");
+}
+
+function playStream(){
+
+}
+function closeStream(){
+  localStream.close();
+  console.log("Local Stream " + localStream.getId() + " Closed");
+  $("#agora_local").remove();
+}
+
+
 
 function switchDuelStream(){
   switchStream = function (){

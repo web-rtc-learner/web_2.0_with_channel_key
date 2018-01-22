@@ -121,9 +121,9 @@
       <div class="row container-fluid">
           Host: <input id="video" type="checkbox" checked>
       </div>
-      <div>
-          Input Channel Key Status = <label id="status"></label>
-          Currnt Volume = <label id="uid_volume"></label><label id="volume"></label>
+      <div class="row container-fluid">
+          <label>Input Channel Key Status = </label><label id="status"></label>
+          <label>Currnt Stream </label><label id="uid_volume"></label><label>Volume is </label></label><label id="volume"></label>
       </div> 
       <div>
           <button type="button" id="join" class="btn btn-primary" onclick="join_channel()">Join</button>
@@ -138,6 +138,7 @@
           <button id="hello" class="btn btn-primary" onclick="hello()">test</button>
           <button type="button" id="close" class="btn btn-primary" onclick="closeStream()">Close</button>
           <button type="button" id="stop" class="btn btn-primary" onclick="stopStream()">Stop</button>
+          <button type="button" id="play" class="btn btn-primary" onclick="playStream()">Play</button>
           <button type="button" id="disableAudio" class="btn btn-primary" onclick="disableAudio()">disable audio</button>
           <button type="button" id="enableAudio" class="btn btn-primary" onclick="enableAudio()">enable audio</button>
           <button type="button" id="disableVideo" class="btn btn-primary" onclick="disableVideo()">disable video</button>
@@ -146,6 +147,7 @@
           <button type="button" id="hasAudio" class="btn btn-primary" onclick="hasAudio()">Audio?</button>
           <button type="button" id="getAttr" class="btn btn-primary" onclick="getAttribute()">get attributes</button>
           <button type="button" id="getAttr" class="btn btn-primary" onclick="getAttribute()">get attributes</button>
+
           
         </div>
 
