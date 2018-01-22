@@ -99,7 +99,7 @@ switch (mode) {
         //localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
         // localStream.disableVideo();
         // if (document.getElementById("video").checked) {
-          localStream.setVideoProfile('180P');  
+          // localStream.setVideoProfile('180P');  
         // }
   //            client.configPublisher({
   //  	width: 480,
@@ -174,7 +174,8 @@ switch (mode) {
     //   console.log("local share screen stream is found");
     // }
     if ($('div#video #agora_remote'+stream.getId()).length === 0  ){
-      $('div#video').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:810px;height:607px;display:inline-block;"></div>');
+      $('div#video').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:210px;height:147px;display:inline-block;"></div>');
+      // $('div#video').append('<lable>Remoter Video Source</lable')
     }
     stream.play('agora_remote' + stream.getId());
   });
@@ -182,6 +183,7 @@ switch (mode) {
   client.on('stream-removed', function (evt) {
     var stream = evt.stream;
     stream.stop();
+    $('div#video').remove('<lable>Remoter Video Source</lable')
     $('#agora_remote' + stream.getId()).remove();
     console.log("Remote stream is removed " + stream.getId());
   });
