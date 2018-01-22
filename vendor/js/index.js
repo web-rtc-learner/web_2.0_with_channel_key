@@ -63,9 +63,6 @@ join();
 
 function join() {
 console.log("Init AgoraRTC client with vendor key: " + appid.value);
-
-// var mode = document.getElementById("mode").innerHTML;
-alert(mode.value);
 switch (mode.value) {
   case "":
   client = AgoraRTC.createClient();
@@ -77,12 +74,6 @@ switch (mode.value) {
   client = AgoraRTC.createClient({mode:'h264_interop'});
     break;
 }
-  // client = AgoraRTC.createClient({mode: 'interop'});
-// 只有 safari 需要 是有 h264_introp
-  // client = AgoraRTC.createClient({mode: 'h264_interop'});
-
-
-
   client.init(appid.value, function () {
     console.log("AgoraRTC client initialized");
   //         client.configPublisher({
@@ -94,7 +85,8 @@ switch (mode.value) {
   // });
     client.join(channel_key, channel.value,test_uid, function(uid) {
       console.log("User " + uid + " join channel successfully");
-
+      document.getElementById("leave").disabled = false;
+      document.getElementById("join").disabled = true;
       if (document.getElementById("video").checked) {
         camera = videoSource.value;
         microphone = audioSource.value;
@@ -108,13 +100,6 @@ switch (mode.value) {
           console.log("video profile is " + vp);
           localStream.setVideoProfile(vp);  
         }
-  //            client.configPublisher({
-  //  	width: 480,
-  //  	height:  480,
-  //  	framerate: 15,
-  //  	bitrate: 500,
-  //  	publishUrl: "rtmp://vid-218.push.fastweb.broadcastapp.agora.io/live/1234_1"
-  // });
 
         // The user has granted access to the camera and mic.
         localStream.on("accessAllowed", function() {
@@ -250,6 +235,7 @@ function leave() {
   document.getElementById("leave").disabled = true;
   client.leave(function () {
     console.log("Leavel channel successfully");
+    document.getElementById("join").disabled = false;
   }, function (err) {
     console.log("Leave channel failed");
   });
