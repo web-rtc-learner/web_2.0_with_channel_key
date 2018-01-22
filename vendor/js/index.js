@@ -103,9 +103,11 @@ switch (mode.value) {
   localStream = AgoraRTC.createStream({streamID: uid, audio: true, cameraId: camera, microphoneId: microphone, video:true, screen: false});
         //localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
         // localStream.disableVideo();
-        // if (document.getElementById("video").checked) {
-          // localStream.setVideoProfile('180P');  
-        // }
+        if (document.getElementById("video").checked) {
+          vp = videoProfile.value;
+          console.log("video profile is " + vp);
+          localStream.setVideoProfile(vp);  
+        }
   //            client.configPublisher({
   //  	width: 480,
   //  	height:  480,

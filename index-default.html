@@ -60,7 +60,7 @@
       <div class="row container-fluid form-inline">
           <label>Appcert:</label>
           <input id="appcert" type="text" value="88666bf3714e4b568f16f5c026df0541" class="form-control" size="35" >
-          <label>Video Profile:</label>
+          <br><label>Video Profile:</label>
           <select name="videoProfile" class="form-control" id="videoProfile">
               <option value="120p,120p_1">120p,120p_1: 160x120, 15fps, 65kbps</option>
               <option value="120p_3">120p_3: 120x120, 15fps, 50kbps</option>
@@ -101,10 +101,36 @@
               <option value="4k,4k_1">4k,4k_1: 3840x2160, 30fps, 8910kbps</option>
               <option value="4k_3">4k_3: 3840x2160, 60fps, 13500kbps</option></select>
           </select>
+          <label>Screen Profile:</label>
+          <select name="screenProfile" class="form-control" id="screenProfile">
+              <option value="480p,480p_1">480p,480p_1: 640x480, 15fps, 500kbps</option>
+              <option value="480p_2">480p_2: 640x480, 30fps, 1000kbps</option>
+              <option value="480p_3">480p_3: 480x480, 15fps, 400kbps</option>
+              <option selected="" value="480p_4">480p_4: 640x480, 30fps, 750kbps</option>
+              <option value="480p_6">480p_6: 480x480, 30fps, 600kbps</option>
+              <option value="480p_8">480p_8: 848x480, 15fps, 610kbps</option>
+              <option value="480p_9">480p_9: 848x480, 30fps, 930kbps</option>
+              <option value="480p_10">480p_10: 640x480, 10fps, 400kbps</option>
+              <option value="720p,720p_1">720p,720p_1: 1280x720, 15fps, 1130kbps</option>
+              <option value="720p_2">720p_2: 1280x720, 15fps, 2080kbps</option>
+              <option value="720p_3">720p_3: 1280x720, 30fps, 1710kbps</option>
+              <option value="720p_5">720p_5: 960x720, 15fps, 910kbps</option>
+              <option value="720p_6">720p_6: 960x720, 30fps, 1380kbps</option>
+              <option value="1080p,1080p_1">1080p,1080p_1: 1920x1080, 15fps, 2080kbps</option>
+              <option value="1080p_2">1080p_2: 1920x1080, 30fps, 3000kbps</option>
+              <option value="1080p_3">1080p_3: 1920x1080, 30fps, 3150kbps</option>
+              <option value="1080p_5">1080p_5: 1920x1080, 60fps, 4780kbps</option>
+              <option value="1440p,1440p_1">1440p,1440p_1: 2560x1440, 30fps, 4850kbps</option>
+              <option value="1440p_2">1440p_2: 2560x1440, 60fps, 7350kbps</option>
+              <option value="4k,4k_1">4k,4k_1: 3840x2160, 30fps, 8910kbps</option>
+              <option value="4k_3">4k_3: 3840x2160, 60fps, 13500kbps</option></select>
+          </select>
       </div>
       <div class="row container-fluid">
-          <label>Channel Key:</label><label id="genChannelKey"></label>
+          <label>Video Channel Key:</label><label id="genChannelKey"></label>
           <input id="input_channel_key" type="text" value="" class="form-control" size="100" >
+          <label>Screen Share Channel Key:</label><label id="genChannelKey_screen"></label>
+          <input id="input_channel_key_screen" type="text" value="" class="form-control" size="100" >
       </div>
       <div class="row container-fluid">
           Host: <input id="video" type="checkbox" checked>
