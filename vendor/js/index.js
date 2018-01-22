@@ -60,8 +60,17 @@ join();
     }
   
 }
+function clearLocalStream(){
+  if (localStream){
+      localStream.close();
+      $("#agora_local").empty();
+  }else{
+    return;
+  }
+}
 
 function join() {
+clearLocalStream();
 console.log("Init AgoraRTC client with vendor key: " + appid.value);
 switch (mode.value) {
   case "":
