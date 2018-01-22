@@ -60,12 +60,18 @@ join();
     }
   
 }
+function clearLocalStream(){
+  if (localStream){
+      localStream.close();
+      $("#agora_local").empty();
+  }else{
+    return;
+  }
+}
 
 function join() {
+clearLocalStream();
 console.log("Init AgoraRTC client with vendor key: " + appid.value);
-
-// var mode = document.getElementById("mode").innerHTML;
-alert(mode.value);
 switch (mode.value) {
   case "":
   client = AgoraRTC.createClient();
@@ -77,12 +83,6 @@ switch (mode.value) {
   client = AgoraRTC.createClient({mode:'h264_interop'});
     break;
 }
-  // client = AgoraRTC.createClient({mode: 'interop'});
-// 只有 safari 需要 是有 h264_introp
-  // client = AgoraRTC.createClient({mode: 'h264_interop'});
-
-
-
   client.init(appid.value, function () {
     console.log("AgoraRTC client initialized");
   //         client.configPublisher({
@@ -94,7 +94,8 @@ switch (mode.value) {
   // });
     client.join(channel_key, channel.value,test_uid, function(uid) {
       console.log("User " + uid + " join channel successfully");
-
+      document.getElementById("leave").disabled = false;
+      document.getElementById("join").disabled = true;
       if (document.getElementById("video").checked) {
         camera = videoSource.value;
         microphone = audioSource.value;
@@ -108,13 +109,6 @@ switch (mode.value) {
           console.log("video profile is " + vp);
           localStream.setVideoProfile(vp);  
         }
-  //            client.configPublisher({
-  //  	width: 480,
-  //  	height:  480,
-  //  	framerate: 15,
-  //  	bitrate: 500,
-  //  	publishUrl: "rtmp://vid-218.push.fastweb.broadcastapp.agora.io/live/1234_1"
-  // });
 
         // The user has granted access to the camera and mic.
         localStream.on("accessAllowed", function() {
@@ -169,19 +163,26 @@ switch (mode.value) {
     console.log("Subscribe ", stream);
     console.log("The stream has video: "+stream.hasVideo());
     console.log("The stream has video: "+stream.hasAudio());
+    console.log("*********************");
+    console.log(stream);
+    console.log("*********************");
     client.subscribe(stream, function (err) {
+      console.log("*********************");
+      console.log(stream);
+      console.log("*********************");
       console.log("Subscribe stream failed", err);
     });
   });
 
   client.on('stream-subscribed', function (evt) {
     var stream = evt.stream;
+   
     console.log("Subscribe remote stream successfully: " + stream.getId());
     // if(stream.getId()==shareScream.getId()){
     //   console.log("local share screen stream is found");
     // }
     if ($('div#video #agora_remote'+stream.getId()).length === 0  ){
-      $('div#video').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:210px;height:147px;display:inline-block;"></div>');
+      $('div#video #agora_remote').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:210px;height:147px;display:inline-block;"></div>');
       // $('div#video').append('<lable>Remoter Video Source</lable')
     }
     stream.play('agora_remote' + stream.getId());
@@ -224,6 +225,22 @@ switch (mode.value) {
 
 }
 
+function stopStream(){
+   localStream.stop();
+   console.log("Local Stream " + localStream.getId() + " Stopped");
+}
+
+function playStream(){
+
+}
+function closeStream(){
+  localStream.close();
+  console.log("Local Stream " + localStream.getId() + " Closed");
+  $("#agora_local").remove();
+}
+
+
+
 function switchDuelStream(){
   switchStream = function (){
     if (highOrLow === 0) {
@@ -243,6 +260,7 @@ function leave() {
   document.getElementById("leave").disabled = true;
   client.leave(function () {
     console.log("Leavel channel successfully");
+    document.getElementById("join").disabled = false;
   }, function (err) {
     console.log("Leave channel failed");
   });

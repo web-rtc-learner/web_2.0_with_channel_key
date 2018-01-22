@@ -106,24 +106,10 @@
               <option value="480p,480p_1">480p,480p_1: 640x480, 15fps, 500kbps</option>
               <option value="480p_2">480p_2: 640x480, 30fps, 1000kbps</option>
               <option value="480p_3">480p_3: 480x480, 15fps, 400kbps</option>
-              <option selected="" value="480p_4">480p_4: 640x480, 30fps, 750kbps</option>
-              <option value="480p_6">480p_6: 480x480, 30fps, 600kbps</option>
-              <option value="480p_8">480p_8: 848x480, 15fps, 610kbps</option>
-              <option value="480p_9">480p_9: 848x480, 30fps, 930kbps</option>
-              <option value="480p_10">480p_10: 640x480, 10fps, 400kbps</option>
               <option value="720p,720p_1">720p,720p_1: 1280x720, 15fps, 1130kbps</option>
               <option value="720p_2">720p_2: 1280x720, 15fps, 2080kbps</option>
-              <option value="720p_3">720p_3: 1280x720, 30fps, 1710kbps</option>
-              <option value="720p_5">720p_5: 960x720, 15fps, 910kbps</option>
-              <option value="720p_6">720p_6: 960x720, 30fps, 1380kbps</option>
               <option value="1080p,1080p_1">1080p,1080p_1: 1920x1080, 15fps, 2080kbps</option>
               <option value="1080p_2">1080p_2: 1920x1080, 30fps, 3000kbps</option>
-              <option value="1080p_3">1080p_3: 1920x1080, 30fps, 3150kbps</option>
-              <option value="1080p_5">1080p_5: 1920x1080, 60fps, 4780kbps</option>
-              <option value="1440p,1440p_1">1440p,1440p_1: 2560x1440, 30fps, 4850kbps</option>
-              <option value="1440p_2">1440p_2: 2560x1440, 60fps, 7350kbps</option>
-              <option value="4k,4k_1">4k,4k_1: 3840x2160, 30fps, 8910kbps</option>
-              <option value="4k_3">4k_3: 3840x2160, 60fps, 13500kbps</option></select>
           </select>
       </div>
       <div class="row container-fluid">
@@ -135,21 +121,36 @@
       <div class="row container-fluid">
           Host: <input id="video" type="checkbox" checked>
       </div>
-      <div>
-          Input Channel Key Status = <label id="status"></label>
-          Currnt Volume = <label id="uid_volume"></label><label id="volume"></label>
+      <div class="row container-fluid">
+          <label>Input Channel Key Status = </label><label id="status"></label>
+          <label>Currnt Stream </label><label id="uid_volume"></label><label>Volume is </label></label><label id="volume"></label>
       </div> 
       <div>
           <button type="button" id="join" class="btn btn-primary" onclick="join_channel()">Join</button>
+          
           <button id="leave" class="btn btn-primary" onclick="leave()">Leave</button>
           <button id="publish" class="btn btn-primary" onclick="publish()">Publish</button>
           <button id="unpublish" class="btn btn-primary" onclick="unpublish()">Unpublish</button>
           <button id="share_screen" class="btn btn-primary" onclick="share()">Share Screen</button>
-          <button id="dis_volume" class="btn btn-primary" onclick="display_volume()">Display Volume</button>
+          <button id="dis_volume" class="btn btn-primary" onclick="display_volume()">Get Volume</button>
           <button id="switch" class="btn btn-primary" onclick="switchDuelStream()">Switch</button>
           <button id="get_device" class="btn btn-primary" onclick="getDevices()">Get Devices</button>
           <button id="hello" class="btn btn-primary" onclick="hello()">test</button>
+          <button type="button" id="close" class="btn btn-primary" onclick="closeStream()">Close</button>
+          <button type="button" id="stop" class="btn btn-primary" onclick="stopStream()">Stop</button>
+          <button type="button" id="play" class="btn btn-primary" onclick="playStream()">Play</button>
+          <button type="button" id="disableAudio" class="btn btn-primary" onclick="disableAudio()">disable audio</button>
+          <button type="button" id="enableAudio" class="btn btn-primary" onclick="enableAudio()">enable audio</button>
+          <button type="button" id="disableVideo" class="btn btn-primary" onclick="disableVideo()">disable video</button>
+          <button type="button" id="enableVideo" class="btn btn-primary" onclick="enableVideo()">enable video</button>
+          <button type="button" id="hasVideo" class="btn btn-primary" onclick="hasVideo()">Video?</button>
+          <button type="button" id="hasAudio" class="btn btn-primary" onclick="hasAudio()">Audio?</button>
+          <button type="button" id="getAttr" class="btn btn-primary" onclick="getAttribute()">get attributes</button>
+          <button type="button" id="getAttr" class="btn btn-primary" onclick="getAttribute()">get attributes</button>
+
+          
         </div>
+
     </div>
     <!-- <div  id="video" style="margin:0 auto;">
         <div class="resize-sensor" id="agora_local" style="float:right;width:210px;height:147px;display:inline-block;"></div>
