@@ -26,6 +26,7 @@ var channel_key,test_uid,test_appcert;
 
 var audioSelect = document.querySelector('select#audioSource');
 var videoSelect = document.querySelector('select#videoSource');
+var audioPlayer = document.querySelector('select#playerSource');
 var inputChannelKey = input_channel_key.value;
 function join_channel(){
  
@@ -50,7 +51,8 @@ function join_channel(){
 join();
     } else {
       $.ajax({
-        url: 'http://recording.agorapremium.agora.io:9001/agora/media/genDynamicKey5?uid='+ uid.value +'&key=' + appid.value + '&sign=' + test_appcert + '&channelname=' + channel.value
+        // url: 'http://recording.agorapremium.agora.io:9001/agora/media/genDynamicKey5?uid'+ uid.value +'&key=' + appid.value + '&sign=' + test_appcert + '&channelname=' + channel.value
+        url: 'http://recording.agorapremium.agora.io:9001/agora/media/genDynamicKey5?uid=0&key=' + appid.value + '&sign=' + test_appcert + '&channelname=' + channel.value
     }).done(function (key) {
         channel_key = key;
         console.log("Channel key is " + key);
@@ -67,6 +69,11 @@ function clearLocalStream(){
   }else{
     return;
   }
+}
+
+function setOutputDevice(){
+    console.log(audioPlayer.value);
+    document.getElementById("video"+localStream.getId().setSinkId(audioPlayer.value));
 }
 
 function join() {
@@ -99,9 +106,19 @@ switch (mode.value) {
       if (document.getElementById("video").checked) {
         camera = videoSource.value;
         microphone = audioSource.value;
+        console.log("*********************");
+        console.log(camera);
+        console.log(microphone);
+        console.log("*********************");
         // alert(camera);
         
-  localStream = AgoraRTC.createStream({streamID: uid, audio: true, cameraId: camera, microphoneId: microphone, video:true, screen: false});
+  localStream = AgoraRTC.createStream({
+    streamID: uid, 
+    audio: true, 
+    cameraId: camera, 
+    microphoneId: microphone, 
+    video:true, 
+    screen: false});
         //localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
         // localStream.disableVideo();
         if (document.getElementById("video").checked) {
@@ -186,6 +203,8 @@ switch (mode.value) {
       // $('div#video').append('<lable>Remoter Video Source</lable')
     }
     stream.play('agora_remote' + stream.getId());
+    document.getElementById("video"+stream.getId()).setSinkId(audioPlayer.value);
+    console.log("****************"+audioPlayer.value);
   });
 
   client.on('stream-removed', function (evt) {
@@ -257,6 +276,7 @@ function switchDuelStream(){
 }
 
 function leave() {
+  clearLocalStream();
   document.getElementById("leave").disabled = true;
   client.leave(function () {
     console.log("Leavel channel successfully");
@@ -275,6 +295,7 @@ function publish() {
 }
 
 function unpublish() {
+  clearLocalStream();
   document.getElementById("publish").disabled = false;
   document.getElementById("unpublish").disabled = true;
   client.unpublish(localStream, function (err) {
@@ -295,11 +316,21 @@ function getDevices() {
       } else if (device.kind === 'videoinput') {
         option.text = device.label || 'camera ' + (videoSelect.length + 1);
         videoSelect.appendChild(option);
-      } else {
+      } else if (device.kind === 'audiooutput'){
+        option.text = device.label || 'playerSource' + (videoSelect.length + 1);
+        playerSource.appendChild(option);
+        
+      } else{
         console.log('Some other kind of source/device: ', device);
       }
     }
   });
+}
+
+function setSink(){
+  audio.setSinkId(audioDevices[0].deviceId);
+console.log('Audio is being played on ' + audio.sinkId);
+  audioPlayer.value
 }
 
 function get_status(){
