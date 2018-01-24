@@ -199,8 +199,9 @@ switch (mode.value) {
     //   console.log("local share screen stream is found");
     // }
     if ($('div#video #agora_remote'+stream.getId()).length === 0  ){
+      $('div#video #agora_remote').append('<lable>Remoter Video Source</lable>')
       $('div#video #agora_remote').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:210px;height:147px;display:inline-block;"></div>');
-      // $('div#video').append('<lable>Remoter Video Source</lable')
+      
     }
     stream.play('agora_remote' + stream.getId());
     document.getElementById("video"+stream.getId()).setSinkId(audioPlayer.value);
@@ -210,16 +211,18 @@ switch (mode.value) {
   client.on('stream-removed', function (evt) {
     var stream = evt.stream;
     stream.stop();
-    $('div#video').remove('<lable>Remoter Video Source</lable')
+    
     $('#agora_remote' + stream.getId()).remove();
     console.log("Remote stream is removed " + stream.getId());
   });
 
   client.on('peer-leave', function (evt) {
+    
     var stream = evt.stream;
     if (stream) {
       stream.stop();
       $('#agora_remote' + stream.getId()).remove();
+      $('div#agora_remote').remove('<lable>Remote Video Source</lable>')
       console.log(evt.uid + " leaved from this channel");
     }
   });
@@ -327,11 +330,11 @@ function getDevices() {
   });
 }
 
-function setSink(){
-  audio.setSinkId(audioDevices[0].deviceId);
-console.log('Audio is being played on ' + audio.sinkId);
-  audioPlayer.value
-}
+// function setSink(){
+//   audio.setSinkId(audioDevices[0].deviceId);
+// console.log('Audio is being played on ' + audio.sinkId);
+//   audioPlayer.value
+// }
 
 function get_status(){
   localStream.getStats(function(stats){
