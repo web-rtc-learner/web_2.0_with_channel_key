@@ -40,15 +40,11 @@ function join_channel(){
     if(input_channel_key.value){
       channel_key=input_channel_key.value;
       join();    
-    }
-    if (!test_appcert) {
+    }else if (!test_appcert) {
         console.log("No channel Key Applied");
         document.getElementById("genChannelKey").innerHTML = "No app cert Applied";
         channel_key = null;
         join();
-    } else if(input_channel_key.value){
-      channel_key = input_channel_key.value;
-join();
     } else {
       $.ajax({
         // url: 'http://recording.agorapremium.agora.io:9001/agora/media/genDynamicKey5?uid'+ uid.value +'&key=' + appid.value + '&sign=' + test_appcert + '&channelname=' + channel.value
