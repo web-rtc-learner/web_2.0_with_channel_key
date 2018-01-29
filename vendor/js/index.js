@@ -73,7 +73,7 @@ function setOutputDevice(){
 }
 
 function join() {
-clearLocalStream();
+// clearLocalStream();
 console.log("Init AgoraRTC client with vendor key: " + appid.value);
 switch (mode.value) {
   case "":
@@ -174,15 +174,9 @@ switch (mode.value) {
     var stream = evt.stream;
     console.log("New stream added: " + stream.getId());
     console.log("Subscribe ", stream);
-    console.log("The stream has video: "+stream.hasVideo());
-    console.log("The stream has video: "+stream.hasAudio());
-    console.log("*********************");
-    console.log(stream);
-    console.log("*********************");
+    console.log("The stream has video with wideth: "+stream.screenAttributes.width);
+    console.log("The stream has video with height: "+stream.screenAttributes.height);
     client.subscribe(stream, function (err) {
-      console.log("*********************");
-      console.log(stream);
-      console.log("*********************");
       console.log("Subscribe stream failed", err);
     });
   });
@@ -349,30 +343,54 @@ function display_volume(){
 }
 
 
+function share(){
+ 
+  channel_key = inputChannelKey;
+  if(share_uid.value==="0"){
+      test_uid = null;
+  }else {
+      test_uid = parseInt(share_uid.value);
+  }
+  test_appcert = appcert.value;
+  if(input_channel_key.value){
+    channel_key=input_channel_key.value;
+    share_screen();    
+  }else if (!test_appcert) {
+      console.log("No channel Key Applied");
+      document.getElementById("genChannelKey").innerHTML = "No app cert Applied";
+      channel_key = null;
+      share_screen();
+  } else {
+    $.ajax({
+      // url: 'http://recording.agorapremium.agora.io:9001/agora/media/genDynamicKey5?uid'+ uid.value +'&key=' + appid.value + '&sign=' + test_appcert + '&channelname=' + channel.value
+      url: 'http://recording.agorapremium.agora.io:9001/agora/media/genDynamicKey5?uid=0&key=' + appid.value + '&sign=' + test_appcert + '&channelname=' + channel.value
+  }).done(function (key) {
+      channel_key = key;
+      console.log("Channel key is " + key);
+      document.getElementById("genChannelKey").innerHTML = channel_key;
+      share_screen();
+  });
+  }
 
-function share() {
-    channel_key = inputChannelKey;
-    if(share_uid.value==="0"){
-        share_uid = null;
-    }else {
-        share_uid = parseInt(share_uid.value);
-    }
+}
 
-    test_appcert = appcert.value;
-    if (!test_appcert) {
-        console.log("No channel Key Applied");
-        document.getElementById("genChannelKey").innerHTML = "No app cert Applied";
-    } else {
-        $.ajax({
-            url: 'http://recording.agorapremium.agora.io:9001/agora/media/genDynamicKey5?uid=0&key=' + appid.value + '&sign=' + test_appcert + '&channelname=' + channel.value
-        }).done(function (key) {
-            channel_key = key;
-            console.log("Channel key is " + key);
-            document.getElementById("genChannelKey").innerHTML = channel_key;
-        });
-    }
 
-  console.log("Init AgoraRTC client with vendor key: " + appid.value);
+function share_screen() {
+  clearLocalStream();
+  console.log("Init AgoraRTC screen with vendor key: " + appid.value);
+  switch (mode.value) {
+    case "":
+    client = AgoraRTC.createClient();
+      break;
+    case "interop":
+    client = AgoraRTC.createClient({mode:'interop'});
+      break;
+    default:
+    client = AgoraRTC.createClient({mode:'h264_interop'});
+      break;
+  }
+
+  console.log("Init AgoraRTC screen with vendor key: " + appid.value);
 
 //web 对 web
   // client = AgoraRTC.createClient({});
