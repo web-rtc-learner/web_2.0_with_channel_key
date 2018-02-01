@@ -10,6 +10,20 @@
     <!-- <script src="AgoraRTC-production.js"></script> -->
     <script src="vendor/js/AgoraRTC-production-2.1-lts.js"></script>
     <!-- <script src="vendor/js/api.js"></script> -->
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="../vendor/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <script
     src="https://code.jquery.com/jquery-3.2.1.js"
     integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
@@ -17,14 +31,51 @@
     </script>
 </head>
 <body>
-    <div id = "inputArea">
+    <div>
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom:0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle Navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span></button>
+                <a class="navbar-brand" href="#">Playgrond</a>
+            </div>
+            <ul class="nav navbar-top-links navbar-right">
+                <div class="sidebar-nav navbar-collapse collapse">
+                    <ul class="nav in" id="side=menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </ul>
+            <div class="navbar-default sidebar" role="navigation">
+                
+
+            </div>
+        </nav>
+        <div>
+                <div id = "inputArea">
+
+                </div>
+                <div id = "operationArea">
+                    
+                </div>
+                <div id = "reportArea">
+                    
+                </div>
+        </div>
 
     </div>
-    <div id = "operationArea">
-        
-    </div>
-    <div id = "reportArea">
-        
-    </div>
+
 </body>
 </html>

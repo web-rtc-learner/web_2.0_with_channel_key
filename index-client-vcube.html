@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Agora Web Sample</title>
+<script src="vendor/js/AgoraRTC-production-2.1-lts.js"></script>
+<script src="vendor/jquery.js"></script>
+<link rel="stylesheet" href="/vendor/css/bootstrap.css">
+</head>
+<body>
+
+<div id="header-fixed">
+  <div id="header-bk">
+    <img src="images/logo_talknote.png" height="50" />
+  </div>
+</div>
+
+<div id="body-bk">
+  <div id="body">
+    <div id="div_device" class="panel panel-default" style="display:block">
+      <div class="select" style="display:inline-block;">
+      <label for="audioSource">マイク: </label><select id="audioSource"></select>
+      </div>
+      <div class="select" style="display:inline-block;">
+      <label for="videoSource">カメラ: </label><select id="videoSource"></select>
+      </div>
+      <div><a href="extension/agora-screen-share.zip">DownLoad plugin</a></div>
+    </div>
+    <div style="float: right;">
+      <a href="#" onclick="onClickDisablePin(); return false;"><img id="pin_disable" src="images/pin_disable.png" width="62" height="62" style="visibility:hidden;"/></a>      
+    </div>
+      
+    <div class="video_area" style="clear:both;">
+      <div id="video_main"></div>
+      <div id="video"></div>
+    </div>
+  </div>
+</div>
+
+<div id="footer-fixed">
+  <div id="footer-bk">
+
+    <a href="#" onclick="muteVideo(); return false;"><img id="video_image" src="images/cameraon.png" width="62" height="62" /></a>    
+    <a href="#" onclick="muteAudio(); return false;"><img id="mic_image" src="images/unmute.png" width="62" height="62" /></a>
+    <a href="#" onclick="screenShare(); return false;"><img id="screen_image" src="images/screen_sharing.png" width="62" height="62" /></a>
+    <a href="#" onclick="changeDualStream(); return false;"><img id="low_stream" src="images/low.png" width="62" height="62" /></a>
+    <a href="https://google.co.jp"><img id="mic_image" src="images/hangup.png" width="62" height="62" /></a>
+
+  </div>
+</div>
+
+<script language="javascript">
+var client, localStream, camera, microphone,gUid,lastLocalStreamId;
+var APP_ID = "aaaafaf28083477b913e669677383a15";
+
+var audioSelect = document.querySelector('select#audioSource');
+var videoSelect = document.querySelector('select#videoSource');
+var isAudioMute = false;
+var isVideoMute = false;
+var isScreen    = false;
+var streamArray = new Array();
+var videoMainStreamId = 0;
+var pinStatus = false;
+var lowStream = false;
+var ext_id = getUrlVars()["ext"] || "ecbobbkoaefaopohcdmcknmjdamfdmpp";
+
+//for dual stream
+setInterval(function() {
+  for(var i in streamArray){
+    if(i==localStream.getId()) continue;
+    //console.log("dual id:"+i);  
+    checkBand(i);
+  }
+}, 5000);
+
+
+function checkBand(i){
+  if(streamArray[i]){
+    var st = streamArray[i];
+    st.getStats(function(stats){
+      console.log("dual check - value:"+i+" -> "+stats["videoReceiveBandwidth"]+"byte");  
+    });
+  }
+}
+
+function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
+function join() {
+
+  var channel_key  = "";
+  var channel_name = getUrlVars()["cname"] || "talknote";
+
+  console.log("Init AgoraRTC client with vendor key: " + APP_ID);
+  if(getUrlVars()["mode"] == "d"){
+    client = AgoraRTC.createClient({mode: 'interop'});
+  }else{
+    client = AgoraRTC.createClient({mode: 'h264_interop'});
+  }
+
+  client.init(APP_ID, function () {
+    console.log("AgoraRTC client initialized");
+    client.join(channel_key, channel_name, null, function(uid) {
+      console.log("User " + uid + " join channel successfully");
+      gUid = uid;
+      localStream = initLocalStream(uid,true);
+      lastLocalStreamId = localStream.getId();
+
+    }, function(err) {
+      console.log("Join channel failed", err);
+    });
+  }, function (err) {
+    console.log("AgoraRTC client init failed", err);
+  });
+
+  channelKey = "";
+  client.on('error', function(err) {
+    console.log("Got error msg:", err.reason);
+    if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
+      client.renewChannelKey(channelKey, function(){
+        console.log("Renew channel key successfully");
+      }, function(err){
+        console.log("Renew channel key failed: ", err);
+      });
+    }
+  });
+
+  client.on('stream-added', function (evt) {
+    var stream = evt.stream;
+    client.subscribe(stream, function (err) {
+      console.log("Subscribe stream failed", err);
+    });
+  });
+
+  client.on('stream-subscribed', function (evt) {
+    var stream = evt.stream;
+    //default:high
+    //client.setRemoteVideoStreamType(stream,0);
+    if(lowStream==true){
+      client.setRemoteVideoStreamType(stream,1);
+    }
+    console.log("Subscribe remote stream successfully: " + stream.getId());
+    if ($('div#video #agora_remote'+stream.getId()).length === 0) {
+      $('div#video').append('<div id="remoteBlock'+stream.getId()+'" style="width:170px;display:inline-block;"><a href="#" onclick="changeVideoMain('+stream.getId()+');return false;"><img src="images/pin.png" width="20px" height="20px" /></a><div id="agora_remote'+stream.getId()+'" style="width:160px;height:120px;display:inline-block;padding:2px;"></div></div>');
+    }
+    stream.play('agora_remote' + stream.getId());
+
+    streamArray[stream.getId()] = stream;
+    removeControls(stream.getId());
+  });
+
+  client.on('stream-removed', function (evt) {
+    var stream = evt.stream;
+    stream.stop();
+    $('#agora_remote' + stream.getId()).remove();
+    $('#remoteBlock' + stream.getId()).remove();
+    console.log("Remote stream is removed " + stream.getId());
+    if(videoMainStreamId == stream.getId()){
+      console.log("change video main");
+      changeVideoMain(lastLocalStreamId,false);
+      onClickDisablePin();
+    }
+  });
+
+  client.on('peer-leave', function (evt) {
+    var stream = evt.stream;
+    if (stream) {
+      stream.stop();
+      $('#agora_remote' + stream.getId()).remove();
+      $('#remoteBlock' + stream.getId()).remove();
+      console.log(evt.uid + " leaved from this channel");
+      //main video remove
+      console.log(videoMainStreamId + " : " + stream.getId());
+      if(videoMainStreamId == stream.getId()){
+        console.log("change video main");
+        changeVideoMain(lastLocalStreamId, false);
+        onClickDisablePin();
+      }
+      streamArray[stream.getId()] = "";
+    }
+  });
+
+  client.on('active-speaker', function(evt) {
+    console.log("v-log call:acticve-speaker");
+    if(pinStatus === false){
+      var uid = evt.uid;
+      changeVideoMain(uid, false);
+      console.log("v-log update active speaker: client" + uid);
+    }
+  });
+
+  client.enableDualStream(function() {
+    console.log('Enable dual stream success!')
+  }, function(err) {
+    console,log(err)
+  });
+
+  client.on('mute-audio', function(evt) {
+    for(var i in evt){
+      console.log("mute-evt:"+i+" - "+evt[i]);
+    }
+  });
+
+  client.on('unmute-audio', function(evt) {
+    for(var i in evt){
+      console.log("unmute-evt:"+i+" - "+evt[i]);
+    }
+  });
+
+  client.on('mute-video', function(evt) {
+    for(var i in evt){
+      console.log("mute-evt-video:"+i+" - "+evt[i]);
+    }
+  });
+
+  client.on('unmute-video', function(evt) {
+    for(var i in evt){
+      console.log("unmute-evt-video:"+i+" - "+evt[i]);
+    }
+  });
+
+}
+
+function initLocalStream(uid,changeMainVideo=false){
+
+  if (localStream) {
+    // local stream exist already
+    client.unpublish(localStream, function(err) {
+        console.log("Unpublish failed with error: ", err);
+    });
+    localStream.close();
+
+    var streamDiv = $("#player_" + lastLocalStreamId);
+    if (streamDiv && streamDiv.length > 0) {
+        streamDiv.remove();
+    }
+    var localDiv = $("#agora_local");
+    if (localDiv && localDiv.length > 0) {
+      localDiv.remove();
+    }
+    var localBlockDiv = $("#localBlock");
+    if (localBlockDiv && localBlockDiv.length > 0) {
+      localBlockDiv.remove();
+    }
+  }
+
+  camera = videoSource.value;
+  microphone = audioSource.value;
+  console.log("camera:" +camera );
+  console.log("microphone:"+microphone);
+  
+  if(isScreen === false){
+//    console.log();
+    localStream = AgoraRTC.createStream({streamID: uid, audio: true, cameraId: camera, microphoneId: microphone, video: true, screen: false});
+  }else{
+    localStream = AgoraRTC.createStream({streamID: uid, audio: true, microphoneId: microphone, video: false, screen: true, extensionId:ext_id});
+  }
+
+  //
+  localStream.setVideoProfile('360P_7');
+  //localStream.setVideoProfile('480P_2');
+
+  localStream.init(function() {
+    console.log("getUserMedia successfully");
+    console.log(localStream);
+    streamArray[localStream.getId()] = localStream;
+    $('div#video').append('<div id="localBlock" style="width:170px;display:inline-block;"><a href="#" onclick="changeVideoMain('+localStream.getId()+');return false;"><img src="images/pin.png" width="20px" height="20px" /></a><div id="agora_local" style="width:160px;height:120px;display:inline-block;padding:2px;"></div></div>');
+
+    localStream.play('agora_local');
+    changeVideoMain(localStream.getId(),false);
+    client.publish(localStream, function (err) {
+      console.log("Publish local stream error: " + err);
+    });
+
+    client.on('stream-published', function (evt) {
+      console.log("Publish local stream successfully");
+    });
+
+
+  }, function (err) {
+    console.log("getUserMedia failed", err);
+  });
+  return localStream;
+}
+
+
+function leave() {
+  document.getElementById("leave").disabled = true;
+  client.leave(function () {
+    console.log("Leavel channel successfully");
+  }, function (err) {
+    console.log("Leave channel failed");
+  });
+}
+
+function publish() {
+  document.getElementById("publish").disabled = true;
+  document.getElementById("unpublish").disabled = false;
+  client.publish(localStream, function (err) {
+    console.log("Publish local stream error: " + err);
+  });
+}
+
+function unpublish() {
+  document.getElementById("publish").disabled = false;
+  document.getElementById("unpublish").disabled = true;
+  client.unpublish(localStream, function (err) {
+    console.log("Unpublish local stream failed" + err);
+  });
+}
+
+function getDevices() {
+  AgoraRTC.getDevices(function (devices) {
+    for (var i = 0; i !== devices.length; ++i) {
+      var device = devices[i];
+      var option = document.createElement('option');
+      option.value = device.deviceId;
+      if (device.kind === 'audioinput') {
+        option.text = device.label || 'マイク: ' + (audioSelect.length + 1);
+        audioSelect.appendChild(option);
+      } else if (device.kind === 'videoinput') {
+        option.text = device.label || 'カメラ: ' + (videoSelect.length + 1);
+        videoSelect.appendChild(option);
+      } else {
+        console.log('Some other kind of source/device: ', device);
+      }
+    }
+  });
+}
+
+function onChangeDevices(){
+  console.log("v-cube");
+  localStream = initLocalStream(gUid,true);
+}
+
+function changeVideoMain(streamId, isPinClick=true){
+  if(isPinClick == true){
+    pinStatus = true;
+    $('#pin_disable').attr("style","visibility:visible;");
+  }
+  console.log("pin status:" + pinStatus);
+  var videoMainDiv = $("#agora_video_main");
+  if (videoMainDiv && videoMainDiv.length > 0) {
+    videoMainDiv.remove();
+  }
+  var stream = streamArray[streamId];
+  videoMainStreamId = streamId;
+  $('div#video_main').append('<div id="agora_video_main" style="width:720px;height:540px;display:inline-block;padding:2px;"></div>');
+  stream.play('agora_video_main');
+  removeControls(streamId);
+}
+
+
+function removeControls(streamId){
+  var videoDiv = $("#video"+streamId);
+    if (videoDiv && videoDiv.length > 0) {
+      var tmpVideoDiv = videoDiv.get(0);
+      tmpVideoDiv.removeAttribute("controls");
+    }
+}
+
+function muteVideo(){
+  if(isVideoMute == false){
+    localStream.disableVideo();
+    $("#video_image").attr("src","images/cameraoff.png");
+    isVideoMute = true;
+  }else{
+    localStream.enableVideo();
+    $("#video_image").attr("src","images/cameraon.png");
+    isVideoMute = false;
+  }
+}
+
+function muteAudio(){
+  if(isAudioMute == false){
+    localStream.disableAudio();
+    $("#mic_image").attr("src","images/mute.png");
+    isAudioMute = true;
+  }else{
+    localStream.enableAudio();
+    $("#mic_image").attr("src","images/unmute.png");
+    isAudioMute = false;
+  }
+}
+
+function onClickDisablePin(){
+  $('#pin_disable').attr("style","visibility:hidden;");
+  pinStatus = false;
+}
+
+function screenShare(){
+  if(isScreen === false){
+    isScreen = true;
+    $("#screen_image").attr("src","images/unscreen_share.png");
+  }else{
+    isScreen = false;
+    $("#screen_image").attr("src","images/screen_sharing.png");
+  }
+  initLocalStream(gUid);
+}
+
+function changeDualStream(){
+  var streamFlg;
+  if(lowStream === false){
+    lowStream = true;
+    streamFlg = 1;
+    $("#low_stream").attr("src","images/unlow.png");
+  }else{
+    lowStream = false;
+    $("#low_stream").attr("src","images/low.png");
+    streamFlg = 0;
+  }  
+
+  for(var i in streamArray){
+    if(i==localStream.getId() || streamArray[i]=="") continue;
+    var st = streamArray[i];       
+    client.setRemoteVideoStreamType(st,streamFlg);
+  }
+}
+
+
+audioSelect.onchange = onChangeDevices;
+videoSelect.onchange = onChangeDevices;
+getDevices();
+join();
+</script>
+</body>
+</html>

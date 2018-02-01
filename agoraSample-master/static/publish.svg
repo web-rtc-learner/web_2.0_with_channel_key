@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="166" height="40" viewBox="0 0 166 40">
+    <defs>
+        <linearGradient id="a" x1="100%" x2="0%" y1="84.285%" y2="20.933%">
+            <stop offset="0%" stop-color="#007EE5"/>
+            <stop offset="100%" stop-color="#05A0FF"/>
+            <stop offset="100%" stop-color="#53F"/>
+        </linearGradient>
+        <rect id="b" width="166" height="40" rx="3"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <use fill="url(#a)" xlink:href="#b"/>
+            <rect width="165" height="39" x=".5" y=".5" stroke="#203580" stroke-opacity=".162" rx="3"/>
+        </g>
+        <text fill="#FFF" font-family="SourceSansPro-Regular, Source Sans Pro" font-size="16" letter-spacing=".3" transform="translate(55 10)">
+            <tspan x=".5" y="16">Publish</tspan>
+        </text>
+    </g>
+</svg>

@@ -3,9 +3,6 @@ if(!AgoraRTC.checkSystemRequirements()) {
   alert("This browswer does not fully support Web RTC");
 }
 
-function return2Index(){
-
-}
 /* select Log type */
 // AgoraRTC.Logger.setLogLevel(AgoraRTC.Logger.NONE);
 // AgoraRTC.Logger.setLogLevel(AgoraRTC.Logger.ERROR);
@@ -120,7 +117,7 @@ switch (mode.value) {
         if (document.getElementById("video").checked) {
           vp = videoProfile.value;
           console.log("video profile is " + vp);
-          localStream.setVideoProfile(vp);  
+          localStream.setVideoProfile("240P_1");  
         }
 
         // The user has granted access to the camera and mic.
@@ -174,8 +171,9 @@ switch (mode.value) {
     var stream = evt.stream;
     console.log("New stream added: " + stream.getId());
     console.log("Subscribe ", stream);
-    console.log("The stream has video with wideth: "+stream.screenAttributes.width);
-    console.log("The stream has video with height: "+stream.screenAttributes.height);
+    console.log("The stream has video with wideth: "+stream.videoSize[0]);
+    console.log("The stream has video with wideth: "+stream.videoSize[1]);
+
     client.subscribe(stream, function (err) {
       console.log("Subscribe stream failed", err);
     });

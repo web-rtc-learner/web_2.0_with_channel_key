@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="280" height="39" style="background:#f4f7fa" viewBox="0 0 280 39">
+    <defs>
+        <path id="b" d="M0 0h280v38H0z"/>
+        <filter id="a" width="100.4%" height="105.3%" x="-.2%" y="-3.9%" filterUnits="objectBoundingBox">
+            <feOffset dy="-1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feComposite in="shadowOffsetOuter1" in2="SourceAlpha" operator="out" result="shadowOffsetOuter1"/>
+            <feColorMatrix in="shadowOffsetOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.0700294384 0"/>
+        </filter>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g transform="translate(0 1)">
+            <use fill="#000" filter="url(#a)" xlink:href="#b"/>
+            <use fill="#203580" fill-opacity=".015" xlink:href="#b"/>
+        </g>
+        <text font-family="SourceSansPro-Regular, Source Sans Pro" font-size="10" letter-spacing=".247" transform="translate(132 11)">
+            <tspan x="0" y="10" fill="#8B8B8B">Get Swoo App </tspan> <tspan x="63.342" y="10" fill="#585858" letter-spacing=".176"> </tspan> <tspan x="65.538" y="10" fill="#007EE5" letter-spacing=".176">Download now</tspan>
+        </text>
+        <g transform="translate(16 9)">
+            <text fill="#CFD7DF" font-family="SourceSansPro-Light, Source Sans Pro" font-size="13" font-weight="300" letter-spacing=".65">
+                <tspan x="2" y="13">c</tspan>
+            </text>
+            <circle cx="5.5" cy="9.5" r="5.5" stroke="#CFD7DF" stroke-linecap="square" stroke-width=".6"/>
+        </g>
+        <text fill="#CFD7DF" font-family="SourceSansPro-Regular, Source Sans Pro" font-size="10" letter-spacing=".5" transform="translate(0 1)">
+            <tspan x="31" y="20">2017</tspan>
+        </text>
+    </g>
+</svg>

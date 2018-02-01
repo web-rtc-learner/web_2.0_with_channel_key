@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)file:///Users/aande/work/SwooBroadcast/sample.html -->
+<html class="trim full"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <script src="./static/adapter.js"></script>
+    <script src="./static/AgoraRTCSDK-2.1.0.js"></script>
+    <script src="./static/jquery-3.2.1.min.js"></script>
+    <script>
+      
+      $( document ).ready(function() {
+          let client, localStream, camera, microphone;
+          let channel = null;
+          let code = '';
+          let u;
+
+          AgoraRTC.getDevices(function(devices) {
+              console.log(devices)
+              devices.forEach(function(item, index) {
+                  if (item.kind == 'videoinput') {
+                      $('#videoSources').append('<option value=\'' + item.deviceId + '\'>' + item.label + ' - '+ item.deviceId + '</option>')
+                  } else if (item.kind == 'audioinput') {
+                      $('#audioSources').append('<option value=\'' + item.deviceId + '\'>' + item.label + ' - '+ item.deviceId + '</option>')
+                  }
+              })
+          });
+
+          function agoraClient(videoid, audioid, key, channelName) {
+              channel = channelName;
+              client = AgoraRTC.createClient({mode: 'h264_interop'});
+              client.init(key, function() {
+                  console.log('AgoraRTC client initialized ' + key)
+
+                  client.join(null, channel, null, function(uid) {
+                          console.log('User join channel successfully')
+
+                //   localStream = AgoraRTC.createStream({streamID: channel, local: true, video: true, audio: true, cameraId: (videoid || ''), fake: true, microphoneId: (audioid || 'default'), screen: false})
+                  localStream = AgoraRTC.createStream({streamID: uid, local: true, video: true, audio: true, cameraId: (videoid || ''), fake: true, microphoneId: (audioid || 'default'), screen: false})
+
+                  localStream.setVideoProfile('720p_3')
+                  localStream.init(function() {
+                      console.log('getUserMedia successfully')
+                      localStream.play('agora_local')
+
+                      $('#publish').attr('src', 'static/stop.svg')
+
+                    //   client.join(null, channel, null, function() {
+                    //       console.log('User join channel successfully')
+                          client.publish(localStream, function(err) {
+                              console.log('Publish local stream error: ' + err)
+                          })
+                          client.on('stream-published', function(evt) {
+                              console.log('Publish local stream successfully')
+                          })
+                      }, function(err) {
+                          console.log('Join channel failed', err)
+                      })
+                  }, function(err) {
+                      console.log('getUserMedia failed', err)
+                  })
+              }, function(err) {
+                  console.log('AgoraRTC client init failed', err)
+              })
+
+              client.on('error', function(err) {
+                  console.log('Got error msg:', err.reason)
+                  if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
+                      client.renewChannelKey(channel, function() {
+                          console.log('Renew channel key successfully')
+                      }, function(err) {
+                          console.log('Renew channel key failed: ', err)
+                      })
+                  }
+              })
+
+              client.on('stream-added', function(evt) {
+                  let stream = evt.stream
+                  console.log('New stream added: ' + stream.getId())
+                  console.log('Subscribe ', stream)
+                  client.subscribe(stream, function(err) {
+                      console.log('Subscribe stream failed', err)
+                  })
+              })
+
+              client.on('stream-subscribed', function(evt) {
+                  let stream = evt.stream
+                  console.log('Subscribe remote stream successfully: ' + stream.getId())
+                  if ($('div#video #agora_remote'+stream.getId()).length === 0) {
+                      $('div#video').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:810px;height:607px;display:inline-block;"></div>')
+                  }
+                  stream.play('agora_remote' + stream.getId())
+              })
+
+              client.on('stream-removed', function(evt) {
+                  let stream = evt.stream
+                  stream.stop()
+                  $('#agora_remote' + stream.getId()).remove()
+                  console.log('Remote stream is removed ' + stream.getId())
+              })
+
+              client.on('peer-leave', function(evt) {
+                  let stream = evt.stream
+                  if (stream) {
+                      stream.stop()
+                      $('#agora_remote' + stream.getId()).remove()
+                      console.log(evt.uid + ' leaved from this channel')
+                  }
+              })
+          }
+
+          $("#foot").on("click", function () {
+              chrome.browser.openTab({url: "https://swoo.tv/"})
+          })
+
+          $('#publish').on('click', function() {
+              client.unpublish(localStream, function(err) {
+                  console.log('Unpublish local stream failed' + err)
+              })
+              client.leave(function() {
+                  console.log('Leavel channel successfully')
+              }, function(err) {
+                  console.log('Leave channel failed')
+              })
+
+              $(this).attr('src', 'static/publish.svg')
+              $(this).prop('disabled', '')
+              $('#code').val('')
+              $('#regForm').css('display', '')
+              $('#preview').css('display', 'none')
+              $('#videoSources').val('')
+              $('#agora_local').html('')
+              $('#head').html('')
+          });
+
+          $('#reg').on('click', function() {
+              if (!$('#code').val()) {
+                  $('#msg').html("Please provide your mobile swoo app secret key.");
+                  $('#code').focus();
+                  return;
+              } else if (!$('#videoSources').val()) {
+                  $('#msg').html("Please select a video source.");
+                  return;
+              } else {
+                  $('#msg').html("Please Wait");
+              }
+
+              code = $('#code').val();
+
+              u = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
+              (c) => {
+                  let r = Math.random() * 16 | 0
+                  let v = c == 'x' ? r : (r & 0x3 | 0x8)
+                  return v.toString(16)
+              })
+
+              agoraClient($('#videoSources').val(), $('#audioSources').val(), $('#code').val(), "channel")
+              
+          })
+      });
+
+
+    </script>
+    <style>
+      #top {
+        position: absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+      }
+      #img {
+        z-index: 2;
+        position: relative;
+        padding:50px;
+        width:50px;
+        height:50px
+        margin:30px;
+      }
+      #regForm {
+        z-index: 3;
+        position: relative;
+        margin: 20px auto;
+        display: grid;
+        text-align:center;
+      }
+      #reg {
+          margin: auto;
+      }
+      #code {
+        width: 75%;
+        height: 30px;
+        outline: none;
+        border:0;
+        box-shadow: 2px 2px 2px 1px #888;
+        border-radius: 2px;
+        margin: 20px auto;
+      }
+      #videoSources {
+        margin: 20px auto;
+        width: 75%;
+        border:0;
+        height: 30px;
+        outline: none;
+        box-shadow: 2px 2px 2px 1px #888;
+      }
+      #audioSources {
+        margin: 20px auto;
+        width: 75%;
+        border:0;
+        height: 30px;
+        outline: none;
+        box-shadow: 2px 2px 2px 1px #888;
+      }
+      #head {
+        -webkit-transform: rotate(-15deg);
+        transform: rotate(-15deg);
+        background-color:#411581;
+        z-index:1;
+        width: calc(100% + 50px);
+        height: 220px;
+        position: absolute;
+        left: -35px;
+        top: -100px;
+      }
+      #broadcastBlock, #preview {
+        display: none;
+        margin:20px auto;
+        text-align:center;
+        position: relative;
+        z-index: 3;
+      }
+      #msg {
+        color: red;
+        margin: 5px;
+      }
+      #video {
+        margin:0 auto;
+      }
+      #foot {
+        bottom:0;
+        position:absolute;
+        height: 40px;
+        width: 100%;
+        z-index: 4;
+      }
+      img.btn {
+        margin: 30px;
+      }
+    </style>
+  </head>
+  <body class="trim full top">
+    <div id="top">
+      <div id="head"> </div>
+      <img id="img" src="./static/logo.svg">
+      <div id="regForm">
+        <div id="msg"> </div>
+        Enter your secure key from mobile <br>
+        <input type="text" id="code" name="code">
+        <br>
+        Select video source <br>
+        <select id="videoSources"><option>-- select --</option></select><br>
+        Select audio source <br>
+        <select id="audioSources"><option>-- select --</option></select><br>
+        <img class="btn" id="reg" name="reg" src="./static/button.svg">
+      </div>
+      <div id="preview" style="display:inline">
+        <div id="video">
+          <div id="agora_local" style="width:50%;height:147px;display:inline-block;"></div>
+        </div><br>
+        <img class="btn" id="publish" name="publish" src="./static/publish.svg">
+      </div>
+    </div>
+    <img id="foot" src="./static/foot.svg">
+
+</body></html>
