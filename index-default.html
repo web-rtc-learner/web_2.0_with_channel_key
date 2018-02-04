@@ -125,6 +125,8 @@
       </div>
       <div class="row container-fluid">
           Host: <input id="video" type="checkbox" checked>
+          Mute Audio(You can open audio later): <input id="isMuteAudio" type="checkbox" checked>
+          Mute Video(You can open Video later): <input id="isMuteVideo" type="checkbox" checked>
       </div>
       <div class="row container-fluid">
           <label>Input Channel Key Status = </label><label id="status"></label>
@@ -145,15 +147,13 @@
           <button type="button" id="close" class="btn btn-primary" onclick="closeStream()">Close</button>
           <button type="button" id="stop" class="btn btn-primary" onclick="stopStream()">Stop</button>
           <button type="button" id="play" class="btn btn-primary" onclick="playStream()">Play</button>
-          <button type="button" id="disableAudio" class="btn btn-primary" onclick="disableAudio()">disable audio</button>
-          <button type="button" id="enableAudio" class="btn btn-primary" onclick="enableAudio()">enable audio</button>
           <button type="button" id="disableVideo" class="btn btn-primary" onclick="disableVideo()">disable video</button>
           <button type="button" id="enableVideo" class="btn btn-primary" onclick="enableVideo()">enable video</button>
           <button type="button" id="hasVideo" class="btn btn-primary" onclick="hasVideo()">Video?</button>
           <button type="button" id="hasAudio" class="btn btn-primary" onclick="hasAudio()">Audio?</button>
           <button type="button" id="getAttr" class="btn btn-primary" onclick="getAttribute()">get attributes</button>
-          <button type="button" id="getAttr" class="btn btn-primary" onclick="getAttribute()">get attributes</button>
-
+          <button type="button" id="mute" class="btn btn-primary" onclick="mute()">mute</button>
+          <button type="button" id="unMute" class="btn btn-primary" onclick="unMute()">unmute</button>
           
         </div>
 

@@ -114,11 +114,11 @@ switch (mode.value) {
     screen: false});
         //localStream = AgoraRTC.createStream({streamID: uid, audio: false, cameraId: camera, microphoneId: microphone, video: false, screen: true, extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg'});
         // localStream.disableVideo();
-        if (document.getElementById("video").checked) {
+        
           vp = videoProfile.value;
           console.log("video profile is " + vp);
           localStream.setVideoProfile("240P_1");  
-        }
+
 
         // The user has granted access to the camera and mic.
         localStream.on("accessAllowed", function() {
@@ -137,6 +137,13 @@ switch (mode.value) {
           client.publish(localStream, function (err) {
             console.log("Publish local stream error: " + err);
           });
+          
+          if (document.getElementById("isMuteAudio").checked){
+            localStream.disableAudio();
+          }
+          if (document.getElementById("isMuteVideo").checked){
+            localStream.disableVideo();
+          }
 
           client.on('stream-published', function (evt) {
             console.log("Publish local stream successfully");
@@ -188,7 +195,7 @@ switch (mode.value) {
     // }
     if ($('div#video #agora_remote'+stream.getId()).length === 0  ){
       $('div#video #agora_remote').append('<lable>Remoter Video Source</lable>')
-      $('div#video #agora_remote').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:210px;height:147px;display:inline-block;"></div>');
+      $('div#video #agora_remote').append('<div id="agora_remote'+stream.getId()+'" style="float:left; width:210px;height:147px;display:inline-block autoplay="autoplay";"></div>');
       
     }
     stream.play('agora_remote' + stream.getId());
@@ -215,6 +222,28 @@ switch (mode.value) {
     }
   });
 
+  client.on('mute-audio', function(evt) {
+    var uid = evt.uid;
+    console.log("mute audio:" + uid);
+    //alert("mute audio:" + uid);
+  });
+
+  client.on('unmute-audio', function (evt) {
+    var uid = evt.uid;
+    console.log("unmute audio:" + uid);
+  });
+
+  client.on('mute-video', function (evt) {
+    var uid = evt.uid;
+    console.log("mute video" + uid);
+    //alert("mute video:" + uid);
+  });
+
+  client.on('unmute-video', function (evt) {
+    var uid = evt.uid;
+    console.log("unmute video:" + uid);
+  });
+
   client.on('client-banned',function(evt){
       var h_uid= evt.uid;
       var attr = evt.attr;
@@ -222,6 +251,7 @@ switch (mode.value) {
    alert(" user banned:" + uid + ", banntype:" + attr);
   });
 
+  
   client.enableDualStream(function(onSuccess){
       console.log("Duel Stream Enabled")
   }, function(onFailure){
@@ -275,6 +305,23 @@ function leave() {
   }, function (err) {
     console.log("Leave channel failed");
   });
+}
+
+function hasAudio(){
+
+}
+
+function hasVideo(){
+
+}
+
+function mute(){
+  localStream.disableAudio();
+
+}
+
+function unMute(){
+  localStream.enableAudio();
 }
 
 function publish() {
